@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Skate Shop</title>
+
+  <style>
+    :root {
+      --dark: #070001;
+      --red: #e1001e;
+      --bright: #880012;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #2a0509;
+      background-image: url(k.jpg);
+    }
+
+    /* top bar */
+    .top {
+      background-color: #000000;
+      color: rgb(255, 255, 255);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .top a {
+      color: #e8a0a8;
+      text-decoration: none;
+      margin-left: 15px;
+    }
+
+    .top a.here {
+      color: white;
+      font-weight: bold;
+    }
+
+    /* white box in the middle */
+    .box {
+      max-width: 420px;
+      margin: 30px auto;
+      background-color: white;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .title {
+      background-color: var(--red);
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .title h1 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    .title p {
+      margin: 5px 0 0 0;
+    }
+
+    .inside {
+      padding: 20px;
+    }
+
+    h2 {
+      color: var(--dark);
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin: 12px 0 5px 0;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    .row {
+      border: 1px solid #e5d0d2;
+      border-radius: 5px;
+      padding: 10px;
+      margin: 8px 0;
+      font-weight: normal;
+    }
+
+    .row span {
+      float: right;
+      color: var(--red);
+      font-weight: bold;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      background-color: var(--red);
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: var(--bright);
+    }
+
+    .error {
+      color: var(--bright);
+      font-weight: bold;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding-top: 15px;
+      border-top: 1px solid #e5d0d2;
+    }
+
+    .small {
+      text-align: center;
+      color: gray;
+    }
+
+    .paper {
+      background-color: #fdf3f3;
+      border: 1px dashed var(--red);
+      padding: 15px;
+      font-family: "Courier New", monospace;
+    }
+
+    .paper p {
+      margin: 5px 0;
+    }
+
+    .sku {
+      text-align: center;
+      font-size: 32px;
+      font-weight: bold;
+      letter-spacing: 3px;
+      color: var(--dark);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top">
+    <b>Skate Shop</b>
+    <span>
+      <a href="#" id="skuLink" onclick="showSku(); return false;">SKU Page</a>
+      <a href="#" id="receiptLink" class="here"
+         onclick="showReceipt(); return false;">Receipt Page</a>
+    </span>
+  </div>
+
+  <div id="receiptPage" class="box">
+    <div class="title">
+      <h1>OBMC MALL</h1>
+      <p>SK8 SHOP</p>
+    </div>
+
+    <div class="inside">
+      <label>Customer Name</label>
+      <input type="text" id="customerName" placeholder="Type your name">
+
+      <h2>Products</h2>
+      <label class="row"><input type="checkbox" class="product" name="Skate Deck" value="1800"> Skate Deck <span>₱1800</span></label>
+      <label class="row"><input type="checkbox" class="product" name="Wheels Set" value="950"> Wheels Set <span>₱950</span></label>
+      <label class="row"><input type="checkbox" class="product" name="Trucks Pair" value="1500"> Trucks Pair <span>₱1500</span></label>
+      <label class="row"><input type="checkbox" class="product" name="Bearings" value="600"> Bearings <span>₱600</span></label>
+      <label class="row"><input type="checkbox" class="product" name="Grip Tape" value="250"> Grip Tape <span>₱250</span></label>
+
+
+      <p id="receiptError" class="error"></p>
+
+      <button onclick="makeReceipt()">Create Order</button>
+
+      <div id="receipt" class="result">
+        <p class="small">Your order summary will appear here.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="skuPage" class="box" style="display: none;">
+    <div class="title">
+      <h1>SKU Generator</h1>
+      <p>Make a code for your product</p>
+    </div>
+
+    <div class="inside">
+      <label>Category</label>
+      <select id="category">
+        <option value="DE">Decks</option>
+        <option value="WH">Wheels</option>
+        <option value="TR">Trucks</option>
+        <option value="CL">Clothes</option>
+        <option value="OT">Others</option>
+      </select>
+
+      <label>Product Name</label>
+      <input type="text" id="productName" placeholder="e.g. Pro Deck">
+
+      <label>Stock Quantity</label>
+      <input type="number" id="stock" placeholder="e.g. 50">
+
+      <p id="skuError" class="error"></p>
+
+      <button onclick="makeSku()">Generate SKU</button>
+
+      <div id="skuResult" class="result">
+        <p class="small">Your SKU will appear here.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    var receiptPage = document.getElementById("receiptPage");
+    var skuPage = document.getElementById("skuPage");
+    var receiptLink = document.getElementById("receiptLink");
+    var skuLink = document.getElementById("skuLink");
+
+    var customerName = document.getElementById("customerName");
+    var products = document.getElementsByClassName("product");
+    var receiptError = document.getElementById("receiptError");
+    var receipt = document.getElementById("receipt");
+
+    var category = document.getElementById("category");
+    var productName = document.getElementById("productName");
+    var stock = document.getElementById("stock");
+    var skuError = document.getElementById("skuError");
+    var skuResult = document.getElementById("skuResult");
+
+   
+    function showReceipt() {
+      receiptPage.style.display = "block";
+      skuPage.style.display = "none";
+      receiptLink.className = "here";
+      skuLink.className = "";
+    }
+
+    function showSku() {
+      receiptPage.style.display = "none";
+      skuPage.style.display = "block";
+      receiptLink.className = "";
+      skuLink.className = "here";
+    }
+
+
+    function makeReceipt() {
+      var total = 0;   
+      var list = "";   
+      var count = 0;   
+
+      for (var i = 0; i < products.length; i++) {
+        if (products[i].checked) {
+          var price = Number(products[i].value);
+          total = total + price;
+          count = count + 1;
+          list = list + "<p>" + products[i].name + " - ₱" + price + "</p>";
+        }
+      }
+
+
+      if (customerName.value == "") {
+        receiptError.innerHTML = "Wusyuname?";
+        return;
+      }
+
+      if (count == 0) {
+        receiptError.innerHTML = "Pretty please pick at least one item.";
+        return;
+      }
+
+      
+      receiptError.innerHTML = "";
+
+      var today = new Date().toLocaleDateString();
+      receipt.innerHTML =
+        "<div class='paper'>" +
+        "<p>Customer: " + customerName.value + "</p>" +
+        "<p>Date: " + today + "</p>" +
+        "<hr>" +
+        list +
+        "<hr>" +
+        "<p><b>TOTAL: ₱" + total + "</b></p>" +
+        "</div>";
+    }
+
+
+    function makeSku() {
+      var name = productName.value.split(" ").join("");  
+      var number = Number(stock.value);   
+
+  
+      if (name.length < 3) {
+        skuError.innerHTML = "Product name needs at least 3 letters.";
+        return;
+      }
+
+  
+      if (stock.value == "" || number < 0 || number > 999) {
+        skuError.innerHTML = "Stock must be a number from 0 to 999.";
+        return;
+      }
+
+ 
+      skuError.innerHTML = "";
+      var part1 = category.value;
+      var part2 = name.substring(0, 3).toUpperCase();
+
+    
+      var part3 = String(number);
+      if (number < 10) {
+        part3 = "00" + number;
+      } else if (number < 100) {
+        part3 = "0" + number;
+      }
+
+    
+      var code = part1 + part2 + part3;
+
+      skuResult.innerHTML = "<p class='sku'>" + code + "</p>";
+    }
+  </script>
+
+</body>
+</html>
